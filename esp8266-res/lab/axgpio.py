@@ -13,7 +13,7 @@ class Gpio:
         elif req["context"][0] == "put":
             return self.put( req )
 
-        elif req["context"][0] == "delete": 
+        elif req["context"][0] == "delete":
             return self.delete( req )
 
 
@@ -21,11 +21,8 @@ class Gpio:
         return {"action":"get" , "data": req }
 
     def post(self, req):
-        # params = req["query_params"]
-        # if params != None:
-        #     for key in params:
-        #         if key.startswith('pin') :  
-
+        xpin = int( req["context"][1] )
+        xvalue = int( req["context"][2] )
         machine.Pin( xpin, machine.Pin.OUT, value= xvalue)
         return {"action":"post", "data": req}
 
