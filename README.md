@@ -36,17 +36,18 @@ CONFIG
 
 ## Usage
 
-get info
+get config
 ```info
 http://192.168.5.1/api/conf/get
 
 ```
 
-set config
+set config 
 ```
 http://192.168.5.1/api/conf/post?broker=x.x.x.x&brkport=1884&topic=xxxxx
 
 ```
+
 
 reset
 ```
