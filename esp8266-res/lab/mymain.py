@@ -54,7 +54,8 @@ class WebServer(object):
         self.mqcli = axmqtt.MqttClient( self.config )
         self.mqcli.connect()
         self.mqcli.subscribe( bytes(self.config["topic"], 'utf-8') )
-
+        self.mqcli.getToken()
+        
         try:
             tim = machine.Timer(-1)
             tim.init(period=200, mode=machine.Timer.PERIODIC, callback=self.mqcli.tick)
