@@ -15,7 +15,8 @@ CONFIG ={
     "brkpasswd":"",
     "noapport": 1880,
     "topic":"",
-    "device":"",
+    "deviceid":"",
+    "devicename":"eps8266",
     "durationpub": 600,
 
     "apssid":"ESPAX",
@@ -37,6 +38,7 @@ class App(object):
         super(App, self).__init__()
         self.apif =  network.WLAN(network.AP_IF) 
         self.staif = network.WLAN(network.STA_IF)
+        self.getApifmac()
         self.loadConfig()
 
     def loadConfig(self):
@@ -55,10 +57,10 @@ class App(object):
                     conf["brkuser"] = "xhsiung"
                 if conf.get("brkpasswd") == "":
                     conf["brkpasswd"] = "@gmail.com"
-                if conf.get("device") == "":
-                    conf["device"] = self.getApifmac()
+                if conf.get("deviceid") == "":
+                    conf["deviceid"] = self.apifmac
                 if conf.get("topic") == "":
-                    conf["topic"] = "/mqtt/"+self.getApifmac()
+                    conf["topic"] = "/mqtt/"+ self.apifmac
 
                 f.write(json.dumps(conf))
                 self.config = conf
@@ -88,11 +90,14 @@ class App(object):
 
     def getApifmac(self):
         if self.apif != None:
-            self.apifmac = ubinascii.hexlify( self.apif.config('mac'),':').decode()
-        return self.apifmac.replace(":","")
-        #if self.staif != None:
-        #    staifmac = ubinascii.hexlify( self.staif.config('mac'),':').decode()
-        #return (apifmac,staifmac)
+            tmpmac = ubinascii.hexlify( self.apif.config('mac'),':').decode()
+            self.apifmac = tmpmac.replace(":","")
+
+        if self.staif != None:
+            tmpmac = ubinascii.hexlify( self.staif.config('mac'),':').decode()
+            self.staifmac = tmpmac.replace(":","")
+
+        return self.apifmac
 
     def getConf(self):
         return self.config
