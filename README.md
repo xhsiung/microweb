@@ -18,18 +18,25 @@ $esptool.py --port /dev/ttyUSB0 --baud 115200 write_flash --flash_size=detect -f
 CONFIG
 ```config
 {
-    "webserver":"192.168.5.1",
+    "webserver":"192.168.4.2",
     "webport": 88,
     "netmask": "255.255.255.0",
-    "gateway":"0.0.0.0",
-    "dns":"8.8.8.8",
-    "broker":"xxx.xxx.xxx.xxx",
-    "brkport": 1883,
-    "topic":"/api/json/data",
+    "gateway":"",
+    "dns":"",
+
+    "broker":"",
+    "brkport": 0,
+    "brkuser":"",
+    "brkpasswd":"",
+    "noapport": 1880,
+    "topic":"",
+    "device":"",
+    "durationpub": 600,
+
     "apssid":"ESPAX",
-    "appasswd":"12345678",
-    "stassid":"xxx",
-    "stapasswd":xxx"",
+    "appasswd":"",
+    "stassid":"",
+    "stapasswd":"",
     "ticktime": 500
 }
 ```
@@ -38,20 +45,20 @@ CONFIG
 
 get config
 ```info
-http://192.168.5.1/api/conf/get
+url/api/conf/get
 
 ```
 
 set config 
 ```
-http://192.168.5.1/api/conf/post?broker=x.x.x.x&brkport=1884&topic=xxxxx
+url/api/conf/post?broker=x.x.x.x&brkport=1884&topic=xxxxx
 
 ```
 
 
 reset
 ```
-http://192.168.5.1/api/reset
+url/api/reset
 ```
 
 Sample
@@ -62,7 +69,8 @@ test
 ## Current status
 
 Done  work:
-* test
+* httpd start
+* mqttd start
 
 ## History
 

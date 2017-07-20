@@ -49,14 +49,16 @@ class WebServer(object):
         self.app.apifConncet()
         self.app.staifConnect()
 
+
     def initMqtt(self):
         self.mqcli = axmqtt.MqttClient( self.config )
         self.mqcli.connect()
-        self.mqcli.subscribe(b"led")
+        self.mqcli.subscribe( bytes(self.config["topic"], 'utf-8') )
 
         try:
             tim = machine.Timer(-1)
-            tim.init(period=1000, mode=machine.Timer.PERIODIC, callback=self.mqcli.tick)
+            tim.init(period=200, mode=machine.Timer.PERIODIC, callback=self.mqcli.tick)
+
         except Exception as e:
             print("Connect Error")
             raise e

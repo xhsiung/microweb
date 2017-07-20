@@ -3,19 +3,25 @@ import ubinascii
 import ujson as json
 
 CONFIG ={
-    "webserver":"192.168.5.1",
+    "webserver":"192.168.4.2",
     "webport": 88,
     "netmask": "255.255.255.0",
-    "gateway":"0.0.0.0",
-    "dns":"8.8.8.8",
+    "gateway":"",
+    "dns":"",
+
     "broker":"axsoho.com",
     "brkport": 1883,
-    "topic":"/api/json/data",
+    "brkuser":"",
+    "brkpasswd":"",
+    "noapport": 1880,
+    "topic":"",
+    "device":"",
+    "durationpub": 600,
 
     "apssid":"ESPAX",
     "appasswd":"12345678",
-    "stassid":"AndroidAP557F",
-    "stapasswd":"ayay2579",
+    "stassid":"BAIS-16F",
+    "stapasswd":"hjkl848484",
     "ticktime": 500
 }
 
@@ -24,12 +30,14 @@ class App(object):
     config = None
     apif = None
     staif = None
+    apifmac = None
+    staifmac = None
 
     def __init__(self):
         super(App, self).__init__()
-        self.loadConfig()
         self.apif =  network.WLAN(network.AP_IF) 
         self.staif = network.WLAN(network.STA_IF)
+        self.loadConfig()
 
     def loadConfig(self):
         try:
@@ -43,6 +51,15 @@ class App(object):
     def saveConfig(self, conf ):
         try:
             with open("/config.json","w") as f:
+                if conf.get("brkuser") == "":
+                    conf["brkuser"] = "xhsiung"
+                if conf.get("brkpasswd") == "":
+                    conf["brkpasswd"] = "@gmail.com"
+                if conf.get("device") == "":
+                    conf["device"] = self.getApifmac()
+                if conf.get("topic") == "":
+                    conf["topic"] = "/mqtt/"+self.getApifmac()
+
                 f.write(json.dumps(conf))
                 self.config = conf
                 f.close()
@@ -55,6 +72,7 @@ class App(object):
     def apifConncet(self):
         print("apif connect")
         self.apif.active(True)
+        print( self.config['apssid']  )
         self.apif.config(essid=self.config['apssid'])
         self.apif.config(password=self.config['appasswd']) 
         self.apif.ifconfig( ( self.config["webserver"], self.config["netmask"], self.config["gateway"], self.config["dns"] ) )
@@ -63,20 +81,18 @@ class App(object):
     def staifConnect(self):
         print("staif connect")
         if not self.staif.isconnected():
-            self.staif.active(False)
             self.staif.active(True)
             self.staif.connect( self.config['stassid'], self.config['stapasswd'])
             while not self.staif.isconnected():pass
             
 
-    def getMac(self):
-        apifmac = None
-        staifmac = None
+    def getApifmac(self):
         if self.apif != None:
-            apifmac = ubinascii.hexlify( self.apif.config('mac'),':').decode()
-        if self.staif != None:
-            staifmac = ubinascii.hexlify( self.staif.config('mac'),':').decode()
-        print( (apifmac,staifmac) )
+            self.apifmac = ubinascii.hexlify( self.apif.config('mac'),':').decode()
+        return self.apifmac.replace(":","")
+        #if self.staif != None:
+        #    staifmac = ubinascii.hexlify( self.staif.config('mac'),':').decode()
+        #return (apifmac,staifmac)
 
     def getConf(self):
         return self.config
