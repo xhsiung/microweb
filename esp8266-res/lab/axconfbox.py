@@ -1,4 +1,4 @@
-        
+import machine
 class Confbox:
     CONFIG = None
     app = None
