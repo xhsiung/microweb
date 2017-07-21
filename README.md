@@ -13,6 +13,9 @@ $wget https://github.com/xhsiung/microweb/blob/master/esp8266-custom-0.0.1.bin
 $esptool.py --port /dev/ttyUSB0 erase_flash
 $esptool.py --port /dev/ttyUSB0 --baud 115200 write_flash --flash_size=detect -fm dio 0 esp8266-custom-0.0.1.bin
 
+$git clone https://github.com/xhsiung/microweb.git
+$cd esp8266-res/lab
+$make install
 ```
 
 CONFIG

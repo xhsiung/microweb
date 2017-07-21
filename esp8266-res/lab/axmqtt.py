@@ -32,6 +32,8 @@ class MqttClient(object):
         if not self.mqtt.connect(clean_session=False):
             self.mqtt.subscribe( channel )
             
+    def publish(self, channel, msg):
+        self.mqtt.publish( channel , msg );
 
     def getToken(self):
         tok = requests.get( self.apiurl ).json()["token"]
@@ -56,9 +58,13 @@ class MqttClient(object):
     def callback(self,topic,msg):
         try:
             obj = json.loads(msg)
-            if obj.get("token") == self.token or obj.get("token") == self.config["brkuser"]:
-                print( (topic,msg, obj["token"]) )
+            if obj.get("token") not in [ self.token , self.config["brkuser"]] :
+                return
+
+            print( (topic,msg, obj["token"]) )
+            if obj.get("action") == "loop":
+                xmsg = { aciton:"loop" , data:"online" }
+                self.publish("helloworld",  json.dumps(xmsg) )
 
         except Exception as e:
             raise e
-
