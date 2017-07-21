@@ -1,4 +1,5 @@
 AMPY=ampy
+SERIAL=/dev/ttyUSB0
 
 MPYFILES := \
 	boot.py \
@@ -15,21 +16,21 @@ install: $(MPYFILES)
 	for f in $^ ; \
 	do \
 	    echo installing $$f ;\
-	    $(AMPY) -p /dev/ttyUSB0 put $$f ;\
+	    $(AMPY) -p $(SERIAL) put $$f ;\
 	done;
 
 
 clean: $(MPYFILES)
-	$(AMPY) -p /dev/ttyUSB0 rm config.json
+	$(AMPY) -p $(SERIAL) rm config.json
 	for f in $^ ; \
 	do \
 	    echo delete $$f ;\
-	    $(AMPY) -p /dev/ttyUSB0 rm $$f ;\
+	    $(AMPY) -p $(SERIAL) rm $$f ;\
 	done;
 
 
 ls:
-	$(AMPY) -p /dev/ttyUSB0 ls
+	$(AMPY) -p $(SERIAL) ls
 
 login:
-	picocom -b 115200 /dev/ttyUSB0
+	picocom -b 115200 $(SERIAL)
